@@ -1,0 +1,775 @@
+Lab 1: Accessing Command Line in Linux
+```
+Task 1: Switching to Root User
+# Switch to the root user
+sudo su
+```
+Task 2: Basic Linux Commands
+# Print current working directory
+pwd
+```
+# Display current domain and username
+whoami
+```
+# Get information about logged-in users
+who
+```
+# Display currently logged-in users and their activities
+w
+```
+# List directories and files in current working directory
+ls
+```
+# List files and directories with specific attributes
+ls -l
+```
+# View contents of /etc/passwd file
+cat /etc/passwd
+```
+# View first ten lines of /etc/passwd file
+head /etc/passwd
+```
+# View last ten lines of /etc/passwd file
+tail /etc/passwd
+```
+# View top five lines of /etc/passwd file
+head -n5 /etc/passwd
+```
+# View last five lines of /etc/passwd file
+tail -n5 /etc/passwd
+```
+# Fetch word count, byte count, line count for /etc/passwd file
+wc /etc/passwd
+wc -w /etc/passwd
+wc -c /etc/passwd
+wc -l /etc/passwd
+```
+# Display file content or command output one page at a time
+less /etc/passwd
+```
+# Fetch all commands executed in the same terminal during earlier sessions
+history
+```
+# Redirect current system date to time.txt file
+date > time.txt
+```
+
+Task 3: Accessing Files and Directories
+# Create new directories
+mkdir Fruits Vegetables
+
+# List all directories and files
+ls
+
+# Change directory to Fruits
+cd Fruits/
+
+# Create new files
+touch banana mango apple
+
+# Navigate back to parent directory
+cd ..
+
+# Create new files within subdirectories
+touch Vegetables/{tomato,potato,chili}
+
+# Verify newly created files in Vegetables directory
+ls Vegetables/
+
+# Create new files
+touch orange corn
+
+# Move file 'orange' to Fruits directory
+mv orange Fruits/
+
+# Move file 'corn' to Vegetables directory
+mv corn Vegetables/
+
+# Create two new directories
+mkdir one two
+
+# Move to directory 'one' and copy files
+cd one/
+cp ~/Vegetables/corn ~/Fruits/banana .
+
+# Move back to parent directory
+cd ..
+
+# Move to directory 'two' and copy files
+cd two/
+cp ~/Vegetables/chili ~/Fruits/apple .
+cd ..
+
+# Install tree command package
+yum install tree -y
+
+# View filesystem structure
+tree
+
+# Long list contents of directories 'one' and 'two'
+ls -l one/ two/
+
+# Recursively remove directories 'one' and 'two'
+rm -rf one/ two/
+
+# List contents
+ls
+
+# Append current system date to time.txt file
+date >> time.txt
+```
+# View contents of time.txt file
+cat time.txt
+```
+---------------------------------------------------------------------
+-----------------------------------------------------------------------
+Lab 2: Managing users and Groups
+
+### Task 1: Verify Users
+# Verify logged-in user
+id
+pwd
+whoami
+who
+w
+
+### Task 2: Users in linux
+
+# Add users user1 & user2
+useradd user1
+useradd user2
+
+# Set passwords for user1 & user2
+passwd user1
+passwd user2
+
+# Get UID & GID for user1 & user2
+id user1
+id user2
+
+# Switch to user1
+su user1
+whoami
+exit
+
+# Switch to user2
+su user2
+whoami
+exit
+
+# View contents of passwd file
+cat /etc/passwd
+tail /etc/passwd
+
+# View contents of shadow file
+cat /etc/shadow
+tail /etc/shadow
+
+# View details of user1 & user2 in passwd file
+cat /etc/passwd | grep user1
+cat /etc/passwd | grep user2
+
+# Modify user2's comment & shell
+usermod -c "IT Admin" user2
+usermod -s /bin/sh user2
+cat /etc/passwd | grep user2
+
+# Create user user3 with specified details
+groupadd demo -g 40004
+useradd user3 -c "HR Admin" -d /mnt/user3 -u 30003 -g 40004
+
+# Verify user3 creation
+cat /etc/passwd | grep user3
+
+# Delete users user1 & user2
+userdel -r user1
+userdel -r user2
+
+# Verify deletion
+tail /etc/passwd
+```
+
+### Task 3: Managing Groups
+
+```
+# Create testuser1 & testuser2
+useradd testuser1
+useradd testuser2
+tail /etc/passwd
+
+# View contents of /etc/group
+cat /etc/group
+tail /etc/group
+
+# Create IT-group & add users to it
+groupadd IT-group
+usermod -G IT-group testuser1
+usermod -G IT-group testuser2
+tail /etc/group
+
+# Create HR-group with manual GID
+groupadd HR-group -g 4005
+tail /etc/group
+
+# Create testuser3 & add to IT-group
+useradd testuser3
+gpasswd -a testuser3 IT-group
+tail /etc/group
+
+# Delete testuser1 & testuser2 from IT-group
+gpasswd -d testuser2 IT-group
+gpasswd -d testuser1 IT-group
+tail /etc/group
+
+# Delete IT-group
+groupdel IT-group
+tail /etc/group
+```
+
+### Task 4: File Permissions
+
+```bash
+# Create testfolder & testfile
+mkdir testfolder
+touch testfile
+
+# Modify permissions for testfolder
+ls -ld testfolder/
+chmod g+w testfolder/
+ls -ld testfolder/
+chmod o-rwx testfolder/
+ls -ld testfolder/
+
+# Remove all permissions for group & others
+chmod go-rwx testfolder
+ls -ld testfolder
+
+# Check default permissions of testfile
+ls -ld testfile
+
+# Remove all permissions from testfile
+chmod a-rwx testfile
+ls -ld testfile
+
+# Grant full access to everyone
+chmod a+rwx testfile
+ls -ld testfile
+
+# Change permissions numerically
+chmod 644 testfile
+ls -ld testfile
+
+# Execute chown & chgrp commands
+ls -ld testfolder/
+chown new-user3 testfolder/
+ls -ld testfolder/
+chgrp test-group testfolder/
+ls -ld testfolder/
+```
+
+### Task 5: Create Hard Link and Soft Link
+
+```
+# Create file page1
+echo "Hello World" > page1
+ls -li page1
+
+# Create hard link page2
+ln page1 page2
+ls -li page1 page2
+
+# Add data to page1 & page2
+date > page1
+ls -li page1 page2
+cat page2
+ps >> page2
+cat page1
+
+# Create soft link page3
+ln -s page1 page3
+ls -li page1 page3
+rm -rf page1
+ls -li page1 page3
+```
+
+```
+---------------------------------------------------------------------
+-----------------------------------------------------------------------
+Lab 3: Linux Storage
+
+Task 1: Create an Additional Primary Partition on Linux
+
+1. List Block Devices:
+   ```
+   # lsblk
+   ```
+
+2. Create Partition with fdisk:
+   ```
+   # fdisk /dev/xvdb
+   ```
+   a. Press "n" to add a new partition.  
+   b. Choose "p" for a primary partition.  
+   c. Select default partition number 1.  
+   d. Provide starting and ending sector (use default).  
+   e. Default options for sector sizes.  
+   f. Size of the partition.  
+   g. Key in "w" to write changes.
+
+3. Detect Partition Table:
+   ```
+   # partprobe
+   ```
+
+4. Format Partition:
+   ```
+   # mkfs.ext4 /dev/xvdb1
+   ```
+
+5. Mount Partition:
+   ```
+   # mkdir /mnt/ext4
+   # mount /dev/xvdb1 /mnt/ext4
+   ```
+
+6. Verify Mount:
+   ```
+   # df -h
+   # lsblk
+   ```
+
+7. Automount (Optional):
+   ```
+   # echo "/dev/xvdb1 /mnt/ext4 ext4 defaults 0 0" >> /etc/fstab
+   # cat /etc/fstab
+   ```
+
+Delete the Partition
+
+1. Edit fstab:
+   ```
+   # vi /etc/fstab
+   ```
+
+2. Unmount Partition:
+   ```
+   # umount /dev/xvdb1
+   ```
+
+3. Delete Partition with fdisk:
+   ```
+   # fdisk /dev/xvdb
+   ```
+
+4. Verify Deletion:
+   ```
+   # lsblk
+   # fdisk -l /dev/xvdb
+   ```
+
+Task 2: Swap Partitions
+
+1. **Format as Swap:**
+   ```
+   # fdisk /dev/xvdb
+   # mkswap /dev/xvdb1
+   ```
+
+2. **Activate Swap and Update fstab:**
+   ```
+   # swapon /dev/xvdb1
+   # blkid /dev/xvdb1
+   # echo "UUID=<uuid> swap swap defaults 0 0" >> /etc/fstab
+   # tail -n1 /etc/fstab
+   ```
+
+Task 3: Archive & Compression
+
+1. **Create Archive Directory:**
+   ```
+   # mkdir archive
+   # cd archive/
+   ```
+
+2. **Copy Files:**
+   ```
+   # cp /etc/passwd testfile
+   # cp /etc/passwd file1
+   # cp /etc/passwd file2
+   # cp /etc/passwd file3
+   # ls -l
+   ```
+
+3. **Create Archive:**
+   ```
+   # tar -cf archive.tar testfile
+   ```
+
+4. **Extract Files:**
+   ```
+   # rm -rf testfile
+   # ls -l
+   # tar -xf ~/archive/archive.tar
+   # ls -l
+   ```
+
+5. **Compress Files:**
+   ```
+   # gzip file1
+   # bzip2 file2
+   # xz file3
+   ```
+
+6. **Compare Sizes:**
+   ```
+   # ls -lk
+   ```
+---------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+Lab 4: Process Management
+
+Task 1: Working with Linux Processes
+
+1. Start a process in the background. Verify it using the jobs command and note down the JobID.
+   ```bash
+   # cat /dev/zero >> /dev/null & 
+   # jobs
+   ```
+
+2. Bring a background process to the foreground, then terminate it using Ctrl+C.
+   ```bash
+   # cat /dev/zero >> /dev/null & 
+   # cat /dev/zero >> /dev/null & 
+   # jobs 
+   # fg %1 
+   press Ctrl+C
+   ```
+
+3. Terminate background processes.
+   ```bash
+   # cat /dev/zero >> /dev/null & 
+   # jobs 
+   ```
+
+4. View all running processes using the ps command.
+   ```bash
+   # ps 
+   # ps all
+   ```
+
+5. Monitor processes using the ps aux command.
+   ```bash
+   # ps aux
+   ```
+
+6. Search for a specific process using grep and terminate it with the kill command.
+   ```bash
+   # ps aux | grep cat 
+   # kill <pid>
+   ```
+
+Task 2: Working System Services
+
+To view, start, stop, restart, enable, or disable system services, use the systemctl command.
+
+1. Check the status of ssh.
+   ```bash
+   # systemctl status ssh
+   ```
+
+2. Stop and disable ssh, then check its status.
+   ```bash
+   # systemctl stop ssh
+   # systemctl disable ssh
+   # systemctl status ssh
+   ```
+
+3. Start and enable ssh, then check its status again.
+   ```bash
+   # systemctl start ssh
+   # systemctl enable ssh
+   # systemctl status ssh
+   ```
+---------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+Lab 5 Monitoring and logging
+Task 1: Top command
+
+Top command is one of the most frequently used commands by administrators in daily administrative tasks. 
+It displays processor activity of server and displays processes managed by kernel in real time. 
+It shows information about running or sleeping processes with processor and memory utilized by them.
+This helps administrators to take correct action as per requirement. 
+
+```bash
+# top
+```
+
+Task 2: Htop command
+- Htop is the visual representation of top command
+- It gives real-time data visualization
+- It helps better representation of your system resources
+- You can do functions like increase or decrease priority, sort by columns, and much more
+
+```bash
+# htop
+```
+Task 3: Listing Running Processes
+You can track the execution of your own processes by employing the ps (process status) command and the ps aux command which is a tool to monitor processes running on your Linux system. 
+```bash
+# ps
+# ps aux
+```
+---------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------
+
+Lab 6: Schedule Job On Linux
+
+Task 1: Working with crontab
+
+1. Creating a cronjob to display the date into a file named date-file every minute:
+   - Use `crontab -e` to edit the scheduling for the root user:
+     ```bash
+     crontab -e
+     ```
+   - Add the following line to the crontab file:
+     ```bash
+     */1 * * * * date >> date-file
+     ```
+   - Save and exit the editor (`:wq` for Vim).
+
+2. Viewing the list of all schedules:
+   - Use `crontab -l` to display the list of all scheduled tasks:
+     ```bash
+     crontab -l
+     ```
+
+3. Verifying that the date-file is saved:
+   - After setting up the cronjob, you can verify that the `date-file` is being saved by following these steps:
+     - Use `ls` command to list the files in the current directory:
+       ```bash
+       ls
+       ```
+     - Use `cat` command to display the contents of the `date-file`:
+       ```bash
+       cat date-file
+       ```
+--------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+
+Lab 7 Part-1: Installing And Managing Software in Red Hat, CentOS, Fedora Linux
+
+Installing new software packages in Linux can be efficiently managed using the YUM package manager.
+
+Task 1: Working with YUM
+
+1. Display YUM Options:
+   ```bash
+   yum --help
+   ```
+
+2. List Enabled Repositories:
+   ```bash
+   yum repolist all
+   ```
+
+3. Clean YUM Cache:
+   ```bash
+   yum clean all
+   ```
+
+4. Update Installed Packages:
+   ```bash
+   yum update
+   ```
+
+Task 2: Installing HTTPD Package
+
+1. Check Installed Packages and Install HTTPD:
+   ```bash
+   yum list installed
+   yum list available
+   yum search httpd
+   yum install httpd -y
+   ```
+
+2. Verify Installation of HTTPD:
+   ```bash
+   yum list installed | grep httpd
+   rpm -qa httpd
+   ```
+
+Task 3: Removing HTTPD Package
+
+1. Remove HTTPD Package:
+   ```bash
+   yum remove httpd -y
+   ```
+
+Lab 7 Part-2: Installing and Managing Software in Ubuntu Linux
+
+For Ubuntu Linux, the apt package manager is used for installing and managing software packages. 
+
+Task 1: Working with apt-get
+
+1. Display apt-get Options:
+   ```bash
+   apt-get --help
+   ```
+
+2. Update Installed Packages:
+   ```bash
+   apt-get update
+   ```
+
+Task 2: Installing apache2 Package
+
+1. Install apache2 Package:
+   ```bash
+   apt-get install apache2 -y
+   ```
+
+2. Verify Installation:
+   - Open a web browser and type the following in the address bar:
+     ```
+     http://localhost/
+     ```
+     Or
+     ```
+     Private IP
+     ```
+
+Task 3: Removing apache2 Package
+
+1. Remove apache2 Package:
+   ```bash
+   apt-get remove apache2
+   ```
+-----------------------------------------------------------------
+------------------------------------------------------------------
+Lab 8: Networking in Linux 
+
+Task 1 - IP Configurations:
+
+List all network interfaces:
+   ip link show
+   ip addr
+
+View IP address of a specific interface (e.g., eth0):
+   ip addr show eth0
+
+Use NetworkManager via CLI:
+   nmcli
+
+Display all network interfaces:
+   nmcli con show
+
+Display active network interfaces:
+   nmcli con show --active
+
+Check device status:
+   nmcli dev status
+
+View contents of hosts file:
+   cat /etc/hosts
+
+Add IP address to hosts file and check connectivity with ping:
+   echo "172.217.219.113 db" >> /etc/hosts
+   cat /etc/hosts
+   ping db -c4
+
+
+Task 2 - Checking Open Ports:
+
+View open TCP ports:
+   cat /etc/services | grep TCP
+
+View trailing entries in the services file:
+   tail /etc/services
+
+View TCP port 80:
+   grep -w '80/tcp' /etc/services
+   cat /etc/services | grep 80/tcp
+
+Using ss to List Open Ports:
+List all open non-listening sockets:
+   ss
+
+Using Netstat to List Open Ports:
+
+Install net-tools package:
+   yum install net-tools -y
+
+View all ports:
+   netstat -a
+
+Task 3 - Working with Firewall:
+
+Check firewall status:
+   firewall-cmd --state
+
+Start firewalld service and verify status:
+   systemctl start firewalld
+   firewall-cmd --state
+
+Add services in firewall:
+   firewall-cmd --permanent --add-service=http
+   firewall-cmd --reload
+   firewall-cmd --list-services
+
+Add ports in firewall:
+   firewall-cmd --permanent --add-port=80/tcp
+   firewall-cmd --permanent --add-port=443/tcp
+   firewall-cmd --reload
+   firewall-cmd --list-ports
+
+-----------------------------------------------------------------
+------------------------------------------------------------------
+Lab 9: Secure Shell and Secure Copy 
+
+Task 1: Working with SSH:
+
+Check SSH service status:
+systemctl status sshd
+
+Ping the remote instance:
+ping <IP_address>
+ping 172.31.2.206 -c3
+
+Uncomment SSH configuration options:
+Edit SSH config file:
+vi /etc/ssh/sshd_config
+
+Uncomment PasswordAuthentication and PermitRootLogin if necessary. Save and exit (:wq).
+
+Restart SSH service:
+systemctl restart sshd
+
+Create remote SSH session:
+ssh root@192.168.10.5
+
+Task 2: SSH Key-based Authentication:
+
+Generate SSH key pair:
+ssh-keygen
+cat /root/.ssh/id_rsa.pub
+
+Copy public key to other instance:
+ssh-copy-id -i /root/.ssh/id_rsa.pub root@192.168.10.5
+
+Task 3: SCP (Secure Copy):
+
+Create a file with current date and time:
+date > time.txt
+
+View files:
+ls
+
+View file content:
+cat time.txt
+
+Copy file to other instance:
+scp time.txt root@172.31.2.206:/root/
+
+Replace <IP_address> and <use your respective IP> with actual IP addresses as needed.
